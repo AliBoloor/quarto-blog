@@ -1,5 +1,5 @@
 ---
-title: "quarto blog"
+title: "Data Science in Economics"
 listing:
   contents: posts
   sort: "date desc"
@@ -10,5 +10,13 @@ listing:
 page-layout: full
 title-block-banner: true
 ---
+
+This blog is a space to explain, analyze, and discuss topics related to financial markets.
+
+The focus is on building intuition around how markets work, how financial instruments are structured and priced, and how data and models are used to form and evaluate views. Topics may include market structure, derivatives, risk, volatility, portfolio construction, and the interpretation of market signals.
+
+The emphasis is on clarity and reasoning rather than hype or predictions. When models or data are used, the goal is to understand what they say, what they do not say, and under what assumptions they are meaningful.
+
+Posts are written for readers who are curious about markets and willing to think carefully, regardless of whether they come from a finance, economics, or technical background.
 
 
