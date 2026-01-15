@@ -1,10 +1,10 @@
 [
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "quarto blog",
     "section": "",
-    "text": "About this blog"
+    "text": "Welcome To My Blog\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nJan 15, 2026\n\n\nAli Boloor\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/welcome/index.html",
@@ -89,12 +89,5 @@
     "title": "Welcome To My Blog",
     "section": "",
     "text": "Historical and implied volatility offer two different lenses on market uncertainty.\nHistorical volatility is simple, transparent, and grounded in realized data. Implied volatility is forward-looking, richer, and shaped by risk preferences and market structure.\nNeither measure is “right” on its own. The most useful insights come from combining both. Historical data anchors us in reality, while implied volatility reveals how the market is pricing the unknown.\nFor someone trading modestly and thoughtfully, understanding both perspectives can mean steadier decisions, fewer surprises, and hopefully a better glass of wine at the end of the week."
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "quarto blog",
-    "section": "",
-    "text": "Welcome To My Blog\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nJan 15, 2026\n\n\nAli Boloor\n\n\n\n\n\nNo matching items"
   }
 ]
