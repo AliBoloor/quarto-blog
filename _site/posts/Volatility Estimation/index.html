@@ -22,6 +22,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -113,7 +148,10 @@ ul.task-list li input[type="checkbox"] {
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
       <h1 class="title">Welcome To My Blog</h1>
-                      </div>
+                                <div class="quarto-categories">
+                <div class="quarto-category">news</div>
+              </div>
+                  </div>
   </div>
     
   
@@ -148,14 +186,227 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="welcome" class="level2">
-<h2 class="anchored" data-anchor-id="welcome">Welcome</h2>
-<p>This blog is a space to explain, analyze, and discuss topics related to financial markets.</p>
-<p>The focus is on building intuition around how markets work, how financial instruments are structured and priced, and how data and models are used to form and evaluate views. Topics may include market structure, derivatives, risk, volatility, portfolio construction, and the interpretation of market signals.</p>
-<p>The emphasis is on clarity and reasoning rather than hype or predictions. When models or data are used, the goal is to understand what they say, what they do not say, and under what assumptions they are meaningful.</p>
-<p>Posts are written for readers who are curious about markets and willing to think carefully, regardless of whether they come from a finance, economics, or technical background.</p>
+<section id="historical-vs-implied-volatility" class="level1">
+<h1><strong>Historical vs Implied Volatility</strong></h1>
+<section id="motivation-and-background" class="level2">
+<h2 class="anchored" data-anchor-id="motivation-and-background"><strong>Motivation and Background</strong></h2>
+<p>If you spend your evenings following the markets, you quickly notice that prices do not move smoothly. Some nights are calm, like a quiet campus after midnight. Other nights are hectic, with news, surprises, and sharp moves. In finance, we use the word <strong>volatility</strong> to describe how rough or calm that ride is.</p>
+<p>For someone like Rivaldo, who enjoys making small profits in the stock market and later spending them on a good bottle of wine, volatility is not an abstract academic idea. It directly affects how risky a trade feels, how much you can gain or lose, and how stressful the experience can be. Understanding volatility helps you decide when to be cautious and when opportunity may be worth the risk.</p>
+<p>This post explains two common ways of thinking about volatility: one that looks backward at what has already happened, and one that looks forward using information embedded in option prices. These are known as <strong>historical volatility</strong> and <strong>implied volatility</strong>.</p>
+<hr>
+</section>
+<section id="what-volatility-represents-in-financial-markets" class="level2">
+<h2 class="anchored" data-anchor-id="what-volatility-represents-in-financial-markets"><strong>What Volatility Represents in Financial Markets</strong></h2>
+<p>Volatility measures how much prices fluctuate over time. A stock that moves up or down by small amounts every day has low volatility. A stock that regularly jumps or crashes has high volatility.</p>
+<p>Volatility is not about direction. A stock can go up a lot and still be volatile, or go down a lot and be volatile. What matters is the size and unpredictability of the moves.</p>
+<hr>
+</section>
+<section id="why-volatility-matters" class="level2">
+<h2 class="anchored" data-anchor-id="why-volatility-matters"><strong>Why Volatility Matters</strong></h2>
+<p>Volatility plays a central role in finance for three main reasons.</p>
+<p>First, it matters for <strong>pricing</strong>. Many financial instruments, especially options, depend directly on volatility. Higher volatility usually means higher option prices.</p>
+<p>Second, it matters for <strong>risk management</strong>. Volatility tells you how uncertain your outcomes are. Higher volatility means a wider range of possible gains and losses.</p>
+<p>Third, it matters for <strong>trading</strong>. Some strategies work best in calm markets, others in turbulent ones. Knowing the volatility regime helps align strategy with market conditions.</p>
+<hr>
+</section>
+<section id="two-perspectives-on-volatility" class="level2">
+<h2 class="anchored" data-anchor-id="two-perspectives-on-volatility"><strong>Two Perspectives on Volatility</strong></h2>
+<p>There are two main ways to think about volatility.</p>
+<ul>
+<li><p>A <strong>backward-looking</strong> view, which measures how much prices moved in the past.</p></li>
+<li><p>A <strong>forward-looking</strong> view, which uses market prices to infer expectations about future movement.</p></li>
+</ul>
+<p>These correspond to historical volatility and implied volatility.</p>
+<hr>
+</section>
+<section id="historical-volatility" class="level2">
+<h2 class="anchored" data-anchor-id="historical-volatility"><strong>Historical Volatility</strong></h2>
+<section id="definition-and-intuition" class="level3">
+<h3 class="anchored" data-anchor-id="definition-and-intuition"><strong>Definition and Intuition</strong></h3>
+<p>Historical volatility measures how much a stock’s price has fluctuated in the past. It is based entirely on realized returns that have already occurred.</p>
+<p>Intuitively, it answers the question: <em>How bumpy has the road been recently?</em></p>
+</section>
+<section id="how-it-is-computed" class="level3">
+<h3 class="anchored" data-anchor-id="how-it-is-computed"><strong>How It Is Computed</strong></h3>
+<p>The standard approach is to take past returns, compute their standard deviation, and scale it to an annual number.</p>
+<p>Here is a simple example using daily returns.</p>
+<div id="bef5e102" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># simulate daily returns</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">0</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>returns <span class="op">=</span> np.random.normal(<span class="dv">0</span>, <span class="fl">0.01</span>, <span class="dv">252</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># rolling 20-day historical volatility</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>hv_20 <span class="op">=</span> pd.Series(returns).rolling(<span class="dv">20</span>).std() <span class="op">*</span> np.sqrt(<span class="dv">252</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>plt.plot(hv_20)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"20-Day Historical Volatility"</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Annualized Volatility"</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-2-output-1.png" width="597" height="431" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="common-choices-and-assumptions" class="level3">
+<h3 class="anchored" data-anchor-id="common-choices-and-assumptions"><strong>Common Choices and Assumptions</strong></h3>
+<p>Several choices go into this calculation.</p>
+<ul>
+<li><p><strong>Rolling windows</strong>: 10 days, 20 days, 60 days, or longer.</p></li>
+<li><p><strong>Sampling frequency</strong>: daily, weekly, or even intraday returns.</p></li>
+<li><p><strong>Stationarity assumption</strong>: past volatility is assumed to be informative about the near future.</p></li>
+</ul>
+<p>Different choices can produce noticeably different numbers.</p>
+</section>
+<section id="strengths-and-limitations" class="level3">
+<h3 class="anchored" data-anchor-id="strengths-and-limitations"><strong>Strengths and Limitations</strong></h3>
+<p>Historical volatility is simple and transparent. Anyone can compute it, and there are no hidden assumptions beyond basic statistics.</p>
+<p>However, it adapts slowly. If market conditions suddenly change, historical volatility only updates as new data comes in. By the time it reflects a new regime, the most important moves may already be over.</p>
+<hr>
+</section>
+</section>
+<section id="implied-volatility" class="level2">
+<h2 class="anchored" data-anchor-id="implied-volatility"><strong>Implied Volatility</strong></h2>
+<section id="definition-and-intuition-1" class="level3">
+<h3 class="anchored" data-anchor-id="definition-and-intuition-1"><strong>Definition and Intuition</strong></h3>
+<p>Implied volatility comes from option prices. Instead of looking at past returns, it asks: <em>What level of volatility makes observed option prices make sense under a pricing model?</em></p>
+<p>In practice, it is the volatility number that traders back out from option prices.</p>
+</section>
+<section id="how-it-is-extracted-from-option-prices" class="level3">
+<h3 class="anchored" data-anchor-id="how-it-is-extracted-from-option-prices"><strong>How It Is Extracted from Option Prices</strong></h3>
+<p>Option pricing models relate option prices to inputs such as stock price, interest rates, time to maturity, and volatility. All inputs except volatility are directly observable. Volatility is inferred as the value that matches the market price.</p>
+</section>
+<section id="why-it-is-often-called-market-expectations" class="level3">
+<h3 class="anchored" data-anchor-id="why-it-is-often-called-market-expectations"><strong>Why It Is Often Called “Market Expectations”</strong></h3>
+<p>Implied volatility reflects what option buyers and sellers are willing to pay for protection or leverage. Because options are forward-looking contracts, implied volatility is commonly interpreted as the market’s view of future uncertainty.</p>
+<p>This interpretation is useful, but not perfect, as we will see.</p>
+</section>
+<section id="key-properties" class="level3">
+<h3 class="anchored" data-anchor-id="key-properties"><strong>Key Properties</strong></h3>
+<p>Implied volatility has several important features.</p>
+<ul>
+<li><p>It depends on <strong>strike price and maturity</strong>. There is not just one implied volatility, but an entire surface.</p></li>
+<li><p>It reflects <strong>risk premia</strong>. Investors often pay extra to insure against bad outcomes.</p></li>
+<li><p>It is influenced by <strong>supply and demand</strong>, not just pure expectations.</p></li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="comparing-historical-and-implied-volatility" class="level2">
+<h2 class="anchored" data-anchor-id="comparing-historical-and-implied-volatility"><strong>Comparing Historical and Implied Volatility</strong></h2>
+<section id="empirical-relationship" class="level3">
+<h3 class="anchored" data-anchor-id="empirical-relationship"><strong>Empirical Relationship</strong></h3>
+<p>When plotted together, historical and implied volatility often move in the same direction, but implied volatility usually sits above historical volatility.</p>
+<div id="7e07accf" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># mock comparison</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>plt.plot(hv_20, label<span class="op">=</span><span class="st">"Historical Volatility"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>plt.axhline(hv_20.mean() <span class="op">*</span> <span class="fl">1.2</span>, linestyle<span class="op">=</span><span class="st">"--"</span>, label<span class="op">=</span><span class="st">"Implied Volatility (stylized)"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Historical vs Implied Volatility"</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-3-output-1.png" width="579" height="431" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="typical-patterns" class="level3">
+<h3 class="anchored" data-anchor-id="typical-patterns"><strong>Typical Patterns</strong></h3>
+<p>Two patterns appear frequently.</p>
+<ul>
+<li><p>Implied volatility tends to exceed historical volatility on average.</p></li>
+<li><p>The gap widens during periods of uncertainty.</p></li>
+</ul>
+</section>
+<section id="when-they-diverge-most" class="level3">
+<h3 class="anchored" data-anchor-id="when-they-diverge-most"><strong>When They Diverge Most</strong></h3>
+<p>The difference between the two measures often grows around major events.</p>
+<ul>
+<li><p><strong>Earnings announcements</strong>, when surprise risk is high.</p></li>
+<li><p><strong>Market stress</strong>, such as financial crises or sudden macroeconomic shocks.</p></li>
+</ul>
+</section>
+<section id="what-information-each-measure-contains" class="level3">
+<h3 class="anchored" data-anchor-id="what-information-each-measure-contains"><strong>What Information Each Measure Contains</strong></h3>
+<p>Historical volatility summarizes what has happened. Implied volatility combines expectations, fear, and compensation for risk. They answer related but different questions.</p>
+<hr>
+</section>
+</section>
+<section id="what-does-the-market-know" class="level2">
+<h2 class="anchored" data-anchor-id="what-does-the-market-know"><strong>What Does the Market “Know”?</strong></h2>
+<section id="predicting-future-volatility" class="level3">
+<h3 class="anchored" data-anchor-id="predicting-future-volatility"><strong>Predicting Future Volatility</strong></h3>
+<p>A natural question is whether implied volatility predicts future realized volatility better than historical measures.</p>
+<p>Empirical studies generally find that implied volatility contains useful information about future volatility, but it is not an unbiased forecast.</p>
+</section>
+<section id="interpretation" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation"><strong>Interpretation</strong></h3>
+<p>The key distinction is between <strong>risk-neutral</strong> and <strong>real-world</strong> expectations.</p>
+<p>Implied volatility reflects prices under a risk-neutral framework, where investors demand compensation for bearing volatility risk. This extra compensation is known as the <strong>volatility risk premium</strong>.</p>
+<p>As a result, implied volatility tends to be higher than what is eventually realized.</p>
+<hr>
+</section>
+</section>
+<section id="data-science-perspective" class="level2">
+<h2 class="anchored" data-anchor-id="data-science-perspective"><strong>Data Science Perspective</strong></h2>
+<section id="framing-as-a-prediction-problem" class="level3">
+<h3 class="anchored" data-anchor-id="framing-as-a-prediction-problem"><strong>Framing as a Prediction Problem</strong></h3>
+<p>From a data science point of view, comparing historical and implied volatility becomes a forecasting task. The goal is to predict future realized volatility using available information.</p>
+<p>Inputs might include:</p>
+<ul>
+<li><p>Past realized volatility</p></li>
+<li><p>Implied volatility levels</p></li>
+<li><p>Features derived from volatility surfaces</p></li>
+<li><p>Market indicators and macro variables</p></li>
+</ul>
+</section>
+<section id="evaluation-challenges" class="level3">
+<h3 class="anchored" data-anchor-id="evaluation-challenges"><strong>Evaluation Challenges</strong></h3>
+<p>This problem has several difficulties.</p>
+<ul>
+<li><p>Realized volatility is noisy.</p></li>
+<li><p>Forecast horizons matter greatly.</p></li>
+<li><p>Structural breaks and regime changes limit model stability.</p></li>
+</ul>
+<p>Purely predictive models often struggle without strong domain knowledge.</p>
+<hr>
+</section>
+</section>
+<section id="practical-implications" class="level2">
+<h2 class="anchored" data-anchor-id="practical-implications"><strong>Practical Implications</strong></h2>
+<section id="for-traders" class="level3">
+<h3 class="anchored" data-anchor-id="for-traders"><strong>For Traders</strong></h3>
+<p>If implied volatility is much higher than historical volatility, some traders sell volatility, collecting premium while betting on calm conditions. Others buy volatility when they expect turbulence.</p>
+</section>
+<section id="for-risk-managers" class="level3">
+<h3 class="anchored" data-anchor-id="for-risk-managers"><strong>For Risk Managers</strong></h3>
+<p>Implied volatility is useful for stress testing. It reveals how the market prices extreme scenarios, even if they have not occurred recently.</p>
+</section>
+<section id="for-modelers" class="level3">
+<h3 class="anchored" data-anchor-id="for-modelers"><strong>For Modelers</strong></h3>
+<p>Historical data alone can be misleading during regime changes. Market-implied information provides a complementary signal when past data is sparse or uninformative.</p>
+<hr>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion"><strong>Conclusion</strong></h2>
+<p>Historical and implied volatility offer two different lenses on market uncertainty.</p>
+<p>Historical volatility is simple, transparent, and grounded in realized data. Implied volatility is forward-looking, richer, and shaped by risk preferences and market structure.</p>
+<p>Neither measure is “right” on its own. The most useful insights come from combining both. Historical data anchors us in reality, while implied volatility reveals how the market is pricing the unknown.</p>
+<p>For someone trading modestly and thoughtfully, understanding both perspectives can mean steadier decisions, fewer surprises, and hopefully a better glass of wine at the end of the week.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

@@ -1,0 +1,376 @@
+---
+title: "Welcome To My Blog"
+author: "Ali Boloor"
+date: "2026-01-15"
+categories: [news]
+---
+
+# **Historical vs Implied Volatility**
+
+  
+
+## **Motivation and Background**
+
+  
+
+If you spend your evenings following the markets, you quickly notice that prices do not move smoothly. Some nights are calm, like a quiet campus after midnight. Other nights are hectic, with news, surprises, and sharp moves. In finance, we use the word **volatility** to describe how rough or calm that ride is.
+
+  
+
+For someone like Rivaldo, who enjoys making small profits in the stock market and later spending them on a good bottle of wine, volatility is not an abstract academic idea. It directly affects how risky a trade feels, how much you can gain or lose, and how stressful the experience can be. Understanding volatility helps you decide when to be cautious and when opportunity may be worth the risk.
+
+  
+
+This post explains two common ways of thinking about volatility: one that looks backward at what has already happened, and one that looks forward using information embedded in option prices. These are known as **historical volatility** and **implied volatility**.
+
+---
+
+## **What Volatility Represents in Financial Markets**
+
+  
+
+Volatility measures how much prices fluctuate over time. A stock that moves up or down by small amounts every day has low volatility. A stock that regularly jumps or crashes has high volatility.
+
+  
+
+Volatility is not about direction. A stock can go up a lot and still be volatile, or go down a lot and be volatile. What matters is the size and unpredictability of the moves.
+
+---
+
+## **Why Volatility Matters**
+
+  
+
+Volatility plays a central role in finance for three main reasons.
+
+  
+
+First, it matters for **pricing**. Many financial instruments, especially options, depend directly on volatility. Higher volatility usually means higher option prices.
+
+  
+
+Second, it matters for **risk management**. Volatility tells you how uncertain your outcomes are. Higher volatility means a wider range of possible gains and losses.
+
+  
+
+Third, it matters for **trading**. Some strategies work best in calm markets, others in turbulent ones. Knowing the volatility regime helps align strategy with market conditions.
+
+---
+
+## **Two Perspectives on Volatility**
+
+  
+
+There are two main ways to think about volatility.
+
+- A **backward-looking** view, which measures how much prices moved in the past.
+    
+- A **forward-looking** view, which uses market prices to infer expectations about future movement.
+    
+
+  
+
+These correspond to historical volatility and implied volatility.
+
+---
+
+## **Historical Volatility**
+
+  
+
+### **Definition and Intuition**
+
+  
+
+Historical volatility measures how much a stock’s price has fluctuated in the past. It is based entirely on realized returns that have already occurred.
+
+  
+
+Intuitively, it answers the question: _How bumpy has the road been recently?_
+
+  
+
+### **How It Is Computed**
+
+  
+
+The standard approach is to take past returns, compute their standard deviation, and scale it to an annual number.
+
+  
+
+Here is a simple example using daily returns.
+
+```{python}
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# simulate daily returns
+np.random.seed(0)
+returns = np.random.normal(0, 0.01, 252)
+
+# rolling 20-day historical volatility
+hv_20 = pd.Series(returns).rolling(20).std() * np.sqrt(252)
+
+plt.plot(hv_20)
+plt.title("20-Day Historical Volatility")
+plt.ylabel("Annualized Volatility")
+plt.show()
+```
+
+### **Common Choices and Assumptions**
+
+  
+
+Several choices go into this calculation.
+
+- **Rolling windows**: 10 days, 20 days, 60 days, or longer.
+    
+- **Sampling frequency**: daily, weekly, or even intraday returns.
+    
+- **Stationarity assumption**: past volatility is assumed to be informative about the near future.
+    
+
+  
+
+Different choices can produce noticeably different numbers.
+
+  
+
+### **Strengths and Limitations**
+
+  
+
+Historical volatility is simple and transparent. Anyone can compute it, and there are no hidden assumptions beyond basic statistics.
+
+  
+
+However, it adapts slowly. If market conditions suddenly change, historical volatility only updates as new data comes in. By the time it reflects a new regime, the most important moves may already be over.
+
+---
+
+## **Implied Volatility**
+
+  
+
+### **Definition and Intuition**
+
+  
+
+Implied volatility comes from option prices. Instead of looking at past returns, it asks: _What level of volatility makes observed option prices make sense under a pricing model?_
+
+  
+
+In practice, it is the volatility number that traders back out from option prices.
+
+  
+
+### **How It Is Extracted from Option Prices**
+
+  
+
+Option pricing models relate option prices to inputs such as stock price, interest rates, time to maturity, and volatility. All inputs except volatility are directly observable. Volatility is inferred as the value that matches the market price.
+
+  
+
+### **Why It Is Often Called “Market Expectations”**
+
+  
+
+Implied volatility reflects what option buyers and sellers are willing to pay for protection or leverage. Because options are forward-looking contracts, implied volatility is commonly interpreted as the market’s view of future uncertainty.
+
+  
+
+This interpretation is useful, but not perfect, as we will see.
+
+  
+
+### **Key Properties**
+
+  
+
+Implied volatility has several important features.
+
+- It depends on **strike price and maturity**. There is not just one implied volatility, but an entire surface.
+    
+- It reflects **risk premia**. Investors often pay extra to insure against bad outcomes.
+    
+- It is influenced by **supply and demand**, not just pure expectations.
+    
+
+---
+
+## **Comparing Historical and Implied Volatility**
+
+  
+
+### **Empirical Relationship**
+
+  
+
+When plotted together, historical and implied volatility often move in the same direction, but implied volatility usually sits above historical volatility.
+
+```{python}
+# mock comparison
+plt.plot(hv_20, label="Historical Volatility")
+plt.axhline(hv_20.mean() * 1.2, linestyle="--", label="Implied Volatility (stylized)")
+plt.legend()
+plt.title("Historical vs Implied Volatility")
+plt.show()
+```
+
+### **Typical Patterns**
+
+  
+
+Two patterns appear frequently.
+
+- Implied volatility tends to exceed historical volatility on average.
+    
+- The gap widens during periods of uncertainty.
+    
+
+  
+
+### **When They Diverge Most**
+
+  
+
+The difference between the two measures often grows around major events.
+
+- **Earnings announcements**, when surprise risk is high.
+    
+- **Market stress**, such as financial crises or sudden macroeconomic shocks.
+    
+
+  
+
+### **What Information Each Measure Contains**
+
+  
+
+Historical volatility summarizes what has happened. Implied volatility combines expectations, fear, and compensation for risk. They answer related but different questions.
+
+---
+
+## **What Does the Market “Know”?**
+
+  
+
+### **Predicting Future Volatility**
+
+  
+
+A natural question is whether implied volatility predicts future realized volatility better than historical measures.
+
+  
+
+Empirical studies generally find that implied volatility contains useful information about future volatility, but it is not an unbiased forecast.
+
+  
+
+### **Interpretation**
+
+  
+
+The key distinction is between **risk-neutral** and **real-world** expectations.
+
+  
+
+Implied volatility reflects prices under a risk-neutral framework, where investors demand compensation for bearing volatility risk. This extra compensation is known as the **volatility risk premium**.
+
+  
+
+As a result, implied volatility tends to be higher than what is eventually realized.
+
+---
+
+## **Data Science Perspective**
+
+  
+
+### **Framing as a Prediction Problem**
+
+  
+
+From a data science point of view, comparing historical and implied volatility becomes a forecasting task. The goal is to predict future realized volatility using available information.
+
+  
+
+Inputs might include:
+
+- Past realized volatility
+    
+- Implied volatility levels
+    
+- Features derived from volatility surfaces
+    
+- Market indicators and macro variables
+    
+
+  
+
+### **Evaluation Challenges**
+
+  
+
+This problem has several difficulties.
+
+- Realized volatility is noisy.
+    
+- Forecast horizons matter greatly.
+    
+- Structural breaks and regime changes limit model stability.
+    
+
+  
+
+Purely predictive models often struggle without strong domain knowledge.
+
+---
+
+## **Practical Implications**
+
+  
+
+### **For Traders**
+
+  
+
+If implied volatility is much higher than historical volatility, some traders sell volatility, collecting premium while betting on calm conditions. Others buy volatility when they expect turbulence.
+
+  
+
+### **For Risk Managers**
+
+  
+
+Implied volatility is useful for stress testing. It reveals how the market prices extreme scenarios, even if they have not occurred recently.
+
+  
+
+### **For Modelers**
+
+  
+
+Historical data alone can be misleading during regime changes. Market-implied information provides a complementary signal when past data is sparse or uninformative.
+
+---
+
+## **Conclusion**
+
+  
+
+Historical and implied volatility offer two different lenses on market uncertainty.
+
+  
+
+Historical volatility is simple, transparent, and grounded in realized data. Implied volatility is forward-looking, richer, and shaped by risk preferences and market structure.
+
+  
+
+Neither measure is “right” on its own. The most useful insights come from combining both. Historical data anchors us in reality, while implied volatility reveals how the market is pricing the unknown.
+
+  
+
+For someone trading modestly and thoughtfully, understanding both perspectives can mean steadier decisions, fewer surprises, and hopefully a better glass of wine at the end of the week.
