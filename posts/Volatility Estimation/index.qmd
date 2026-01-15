@@ -1,8 +1,8 @@
 ---
-title: "Welcome To My Blog"
+title: "Volatility"
 author: "Ali Boloor"
 date: "2026-01-15"
-categories: [news]
+# categories: [news]
 ---
 
 # **Historical vs Implied Volatility**
